@@ -159,7 +159,6 @@ set(SRC
 
     src/util/font_renderer.cpp
     src/util/logger.cpp
-    src/util/termcolor.cpp
     src/util/math_expression.cpp
     src/util/preview_tev.cpp
     src/util/tpool.cpp
