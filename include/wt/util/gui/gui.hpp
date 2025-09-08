@@ -10,7 +10,6 @@
 #pragma once
 
 #include <memory>
-#include <mutex>
 
 #include <wt/math/common.hpp>
 #include <wt/bitmap/bitmap.hpp>
@@ -46,8 +45,7 @@ public:
         std::atomic<f_t> scene_loading_progress = 0;
         std::atomic<f_t> resource_loading_progress = 0;
         std::atomic<f_t> ads_construction_progress = 0;
-        std::shared_ptr<std::string> ads_construction_status;
-        mutable std::mutex ads_construction_status_mutex;
+        std::atomic<std::shared_ptr<std::string>> ads_construction_status;
     };
 
 private:
