@@ -65,9 +65,9 @@ private:
     std::unique_ptr<texture::quantity_t<rms_t>> sigmah_tex;
 
     [[nodiscard]] inline auto sigma2_normalized(const auto& T, const wavenumber_t k) const noexcept {
-        const auto x = (f_t)(1 + k*k * T);
-        const auto p = gamma==3 ? x : m::pow(x, (gamma-1)/2);
-        return 1/(1 - f_t(1)/p);
+        const auto x = f_t(1) + (k*k * T).numerical_value_in(u::one);
+        const auto p = gamma==f_t(3) ? x : m::pow(x, (gamma-f_t(1))/f_t(2));
+        return f_t(1)/(f_t(1) - f_t(1)/p);
     }
 
     struct params_t {
@@ -105,10 +105,10 @@ private:
     [[nodiscard]] inline f_t psd(const params_t& params,
                                  const qvec2<Qz>& z, 
                                  const Wavenumber auto& k) const noexcept {
-        const auto x = 1 + params.T*m::dot(z,z);
-        const auto p = gamma==3 ? (f_t)(x*x) : m::pow((f_t)x, (gamma+1)/2);
-        const auto f = 1/p;
-        return params.sigma2_norm * (f_t)(m::inv_two_pi * k*k * (gamma-1) * params.T * f);
+        const auto x = f_t(1) + (params.T*m::dot(z,z)).numerical_value_in(u::one);
+        const auto p = gamma==f_t(3) ? x*x : m::pow(x, (gamma+f_t(1))/f_t(2));
+        const auto f = f_t(1)/p;
+        return params.sigma2_norm * m::inv_two_pi * (k*k * (gamma-f_t(1)) * params.T * f).numerical_value_in(u::one);
     }
 
 public:

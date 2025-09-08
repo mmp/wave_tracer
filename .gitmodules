@@ -53,3 +53,12 @@
 [submodule "deps/imgui_toggle"]
 	path = deps/imgui_toggle
 	url = https://github.com/cmdwtf/imgui_toggle
+[submodule "deps/yaml-cpp"]
+	path = deps/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "deps/openexr"]
+	path = deps/openexr
+	url = https://github.com/AcademySoftwareFoundation/openexr.git
+[submodule "deps/pugixml"]
+	path = deps/pugixml
+	url = https://github.com/zeux/pugixml.git

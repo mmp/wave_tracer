@@ -57,11 +57,11 @@ surface_profile_sample_ret_t fractal_t::sample(
     const f_t z = m::sqrt(m::max<f_t>(0,1-m::dot(wo,wo)));
 
     const auto psd = this->psd(params, zeta, k);
-    const auto w   = m::inv_pi * (phi_max/u::ang::rad);
+    const auto w   = m::inv_pi * phi_max.numerical_value_in(u::ang::rad);
     const auto pdf = w>f_t(1e-2) ? z * psd / w : 0;
 
     return surface_profile_sample_ret_t{
-        .wo  = dir3_t{ wo, wi.z>=0 ? z : -z },
+        .wo  = dir3_t{ wo.x, wo.y, wi.z>=0 ? z : -z },
         .pdf = (f_t)pdf,
         .psd = psd,
         .weight = (f_t)w,

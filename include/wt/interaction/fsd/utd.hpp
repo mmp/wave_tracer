@@ -26,8 +26,8 @@ template <int sgn>
 inline constexpr f_t UTDa(const Angle auto phi, f_t n) noexcept {
     static_assert(sgn==+1 || sgn==-1);
 
-    const auto N = m::round((f_t)(sgn * m::pi + phi/u::ang::rad) * m::inv_two_pi / n);
-    return 2 * m::sqr(m::cos(m::pi*n*N * u::ang::rad - phi/2));
+    const auto N = m::round((f_t(sgn) * m::pi + phi.numerical_value_in(u::ang::rad)) * m::inv_two_pi / n);
+    return f_t(2) * m::sqr(std::cos(m::pi*n*N - phi.numerical_value_in(u::ang::rad)/f_t(2)));
 }
 
 /**

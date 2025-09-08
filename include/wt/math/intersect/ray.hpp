@@ -12,6 +12,7 @@
 #include <optional>
 
 #include "intersect_defs.hpp"
+#include <wt/math/quantity/defs.hpp>
 
 #include <wt/math/common.hpp>
 #include <wt/math/barycentric.hpp>
@@ -173,7 +174,7 @@ inline std::optional<intersect_ray_tri_ret_t> intersect_ray_tri(
         const auto bux = bx * recp_det;
         const auto buy = by * recp_det;
 
-        return intersect_ray_tri_ret_t{ dist, barycentric_t(vec2_t{ 1-(bux+buy),bux }) };
+        return intersect_ray_tri_ret_t{ dist, barycentric_t(vec2_t{ f_t(1)-(bux+buy).numerical_value_in(u::one), bux.numerical_value_in(u::one) }) };
     }
 
     return std::nullopt;

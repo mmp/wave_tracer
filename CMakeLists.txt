@@ -366,14 +366,26 @@ if(build_type STREQUAL release)
     add_compile_definitions(NDEBUG)
     add_compile_definitions(RELEASE)
 
-    set_property(TARGET wave_tracer PROPERTY INTERPROCEDURAL_OPTIMIZATION True)
+    # Disable LTO on macOS with GCC due to missing linker plugin support
+    if(NOT (APPLE AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"))
+        set_property(TARGET wave_tracer PROPERTY INTERPROCEDURAL_OPTIMIZATION True)
+    endif()
 
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
         target_compile_options(wave_tracer PRIVATE 
             /O2 /Oy
         )
+    elseif(APPLE AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        # macOS with GCC: omit LTO flags
+        target_compile_options(wave_tracer PRIVATE
+            -O3 -fomit-frame-pointer
+            -ftree-vectorize
+        )
+        target_link_options(wave_tracer PRIVATE
+            -O3
+        )
     else()
-        target_compile_options(wave_tracer PRIVATE 
+        target_compile_options(wave_tracer PRIVATE
             -O3 -fomit-frame-pointer
             -ftree-vectorize -flto=auto
         )
@@ -394,11 +406,23 @@ if(build_type STREQUAL profile)
     add_compile_definitions(_additional_bitmap_stats)
     add_compile_definitions(_additional_scene_stats)
 
-    set_property(TARGET wave_tracer PROPERTY INTERPROCEDURAL_OPTIMIZATION True)
+    # Disable LTO on macOS with GCC due to missing linker plugin support
+    if(NOT (APPLE AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"))
+        set_property(TARGET wave_tracer PROPERTY INTERPROCEDURAL_OPTIMIZATION True)
+    endif()
 
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
         target_compile_options(wave_tracer PRIVATE 
             /O2 /Oy
+        )
+    elseif(APPLE AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        # macOS with GCC: omit LTO flags
+        target_compile_options(wave_tracer PRIVATE 
+            -O3 -g -fomit-frame-pointer
+            -ftree-vectorize
+        )
+        target_link_options(wave_tracer PRIVATE
+            -O3 -g
         )
     else()
         target_compile_options(wave_tracer PRIVATE 
@@ -416,19 +440,12 @@ endif()
 # -- external dependencies --
 find_package(PNG)
 find_package(libdeflate CONFIG REQUIRED)
-find_package(OpenEXR CONFIG REQUIRED)
 find_package(Freetype REQUIRED)
-
 find_package(TBB CONFIG REQUIRED)
-
-find_package(yaml-cpp CONFIG REQUIRED)
-find_package(pugixml CONFIG REQUIRED)
-
 
 target_include_directories(wave_tracer PRIVATE 
     include
 
-    ${OPENEXR_INCLUDE_DIRS}
     ${FREETYPE_INCLUDE_DIRS}
 )
 
@@ -437,13 +454,9 @@ target_link_libraries(wave_tracer PRIVATE
 
     PNG::PNG
     $<IF:$<TARGET_EXISTS:libdeflate::libdeflate_shared>,libdeflate::libdeflate_shared,libdeflate::libdeflate_static>
-    OpenEXR::OpenEXR
     Freetype::Freetype
 
     TBB::tbb
-    
-    yaml-cpp::yaml-cpp
-    pugixml::pugixml
 )
 
 if(BUILD_GUI)
@@ -492,10 +505,18 @@ if(BUILD_GUI)
         ${GLEW_INCLUDE_DIRS}
     )
 
-    target_link_libraries(wave_tracer PUBLIC
-        GL
-        GLEW::GLEW
-    )
+    if(APPLE)
+        # macOS uses OpenGL framework, not a library
+        target_link_libraries(wave_tracer PUBLIC
+            "-framework OpenGL"
+            GLEW::GLEW
+        )
+    else()
+        target_link_libraries(wave_tracer PUBLIC
+            GL
+            GLEW::GLEW
+        )
+    endif()
 endif(BUILD_GUI)
 
 

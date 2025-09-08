@@ -22,12 +22,30 @@ add_subdirectory(libcerf/libcpp)
 
 add_subdirectory(function2)
 
+set(YAML_CPP_BUILD_TESTS OFF CACHE BOOL " " FORCE)
+set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL " " FORCE)
+set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL " " FORCE)
+add_subdirectory(yaml-cpp)
+
+set(PUGIXML_BUILD_TESTS OFF CACHE BOOL " " FORCE)
+add_subdirectory(pugixml)
+
+set(BUILD_TESTING OFF CACHE BOOL " " FORCE)
+set(OPENEXR_BUILD_TOOLS OFF CACHE BOOL " " FORCE)
+set(OPENEXR_INSTALL OFF CACHE BOOL " " FORCE)
+set(OPENEXR_INSTALL_EXAMPLES OFF CACHE BOOL " " FORCE)
+set(OPENEXR_BUILD_EXAMPLES OFF CACHE BOOL " " FORCE)
+add_subdirectory(openexr)
+
 
 target_link_libraries(wave_tracer PUBLIC
     mp-units::mp-units
     Sockpp::sockpp
     cerfcpp
-
+    yaml-cpp
+    pugixml
+    OpenEXR::OpenEXR
+    OpenEXR::OpenEXRUtil
     function2
 
     githash
@@ -55,6 +73,10 @@ target_include_directories(wave_tracer PRIVATE
     
     mp-units/src/core/include
     tinyexpr-plusplus
+
+    yaml-cpp/include
+    pugixml/src
+    ${CMAKE_BINARY_DIR}/deps/openexr/src/lib  # For generated headers
 
     GitHash/include
 )

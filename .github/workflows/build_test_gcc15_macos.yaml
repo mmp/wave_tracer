@@ -1,0 +1,46 @@
+name: (macOS gcc-15) Build and Test
+on:
+   push:
+     tags:
+       - "*"
+     paths:
+       - src/**
+       - include/**
+     branches: [main]
+permissions:
+   contents: read
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build_gcc15_macos:
+     name: Test build and compilation with gcc-15
+     timeout-minutes: 200
+     runs-on: macos-latest
+
+     steps:
+       - uses: actions/checkout@v4
+
+       - uses: lukka/get-cmake@latest
+
+       - name: Install gcc-15 via Homebrew
+         run: |
+           brew update
+           brew install gcc@15
+
+       - name: Update submodules
+         run: |
+           git rm scenes || true; git submodule update --init --recursive
+
+       - name: Configure
+         run: |
+           env CC=gcc-15 CXX=g++-15 cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=Release
+
+       - name: Build
+         run: |
+           cmake --build ./build --config Release -j4
+
+       - name: Test run
+         run: |
+           build/wave_tracer.app/Contents/MacOS/wave_tracer version 1>&2
