@@ -6,7 +6,6 @@ on:
      paths:
        - src/**
        - include/**
-     branches: [main]
 permissions:
    contents: read
 
@@ -35,11 +34,11 @@ jobs:
 
        - name: Configure
          run: |
-           env CC=gcc-15 CXX=g++-15 cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=Release
+           env CC=gcc-15 CXX=g++-15 cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
        - name: Build
          run: |
-           cmake --build ./build --config Release -j4
+           cmake --build ./build --config $BUILD_TYPE -j4
 
        - name: Test run
          run: |

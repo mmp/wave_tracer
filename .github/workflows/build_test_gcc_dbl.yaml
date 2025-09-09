@@ -6,7 +6,6 @@ on:
      paths:
        - src/**
        - include/**
-     branches: [main]
 permissions:
    contents: read
 

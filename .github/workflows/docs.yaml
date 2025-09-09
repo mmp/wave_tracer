@@ -7,7 +7,6 @@ on:
        - docs/**
        - src/**
        - include/**
-     branches: [main]
 permissions:
    contents: read
 
