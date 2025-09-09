@@ -39,8 +39,6 @@ Included By
 -----------
 
 
-- :ref:`file__home_runner_work_wave_tracer_wave_tracer_include_wt_math_intersect_ray.hpp`
-
 - :ref:`file__home_runner_work_wave_tracer_wave_tracer_include_wt_math_quantity_EM_concepts.hpp`
 
 - :ref:`file__home_runner_work_wave_tracer_wave_tracer_include_wt_math_quantity_math.hpp`
