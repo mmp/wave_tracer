@@ -1,11 +1,11 @@
 name: (macOS gcc-15) Build and Test
 on:
    push:
+     branches:
+       - osx-gcc15-cleanup
+       - main
      tags:
        - "*"
-     paths:
-       - src/**
-       - include/**
 permissions:
    contents: read
 

@@ -1,11 +1,11 @@
 name: (Ubuntu latest gcc, double-precision, no avx) Build and Test
 on:
    push:
+     branches:
+       - osx-gcc15-cleanup
+       - main
      tags:
        - "*"
-     paths:
-       - src/**
-       - include/**
 permissions:
    contents: read
 

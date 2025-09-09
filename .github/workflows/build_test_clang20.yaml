@@ -1,11 +1,11 @@
 name: (Ubuntu latest clang-20) Build and Test
 on:
    push:
+     branches:
+       - osx-gcc15-cleanup
+       - main
      tags:
        - "*"
-     paths:
-       - src/**
-       - include/**
 permissions:
    contents: read
 

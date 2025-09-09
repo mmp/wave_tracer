@@ -1,12 +1,11 @@
 name: Documentation
 on:
    push:
+     branches:
+       - osx-gcc15-cleanup
+       - main
      tags:
        - "*"
-     paths:
-       - docs/**
-       - src/**
-       - include/**
 permissions:
    contents: read
 
